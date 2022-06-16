@@ -22,24 +22,54 @@ class Department {
     }
 }
 
+
+class ITDepartment extends Department{
+    admins: string[]
+    constructor(id: string, admins: string[]) {
+        super(id, 'IT')
+        this.admins = admins
+    }
+}
+
+class AccountingDepartment extends Department {
+    constructor(id: string, private reports: string[]) {
+        super(id, 'IT')
+    }
+
+    addReport(text: string) {
+        this.reports.push(text);
+    }
+
+    getReports() {
+        console.log(this.reports);
+    }
+}
+
+
 // creating a department object - now we pass constructor arg to this department between () 
-const accounting = new Department('d1', 'Accounting');
+const it = new ITDepartment('d1', ['Nio']);
 
-accounting.addEmployee('Huugo')
-accounting.addEmployee('Manu')
+it.addEmployee('Huugo')
+it.addEmployee('Manu')
 
-// accounting.employees[2] = 'Anna' // this cannot be used cuz private propertu
+// it.employees[2] = 'Anna' // this cannot be used cuz private propertu
 
-accounting.describe();
-accounting.name = 'New House';
-accounting.printEmployeeInformation();
+it.describe();
+it.name = 'New House';
+it.printEmployeeInformation();
 
-// const accountingCopy = { name: 'Dummy', describe: accounting.describe}
+console.log(it)
+
+const accounting = new AccountingDepartment('d2', []);
+accounting.addReport('Something went wrong...');
+accounting.getReports();
+
+// const itCopy = { name: 'Dummy', describe: it.describe}
 
 // undefined cuz we are adding a describe property to this object created with object liteal
-// , not based on this class. And value of described property is a pointer at the described method in accounting obj
-// when the method executes, this key work wont refer to this accounting object
-// this method was part of originally, not to the accounting object
-// describe is called on accountingCopy and it is an object has no name property
-// so when we access this.name from accounting.describe, we get an error because this doesnt refer to an object with a name.
-// accountingCopy.describe();
+// , not based on this class. And value of described property is a pointer at the described method in it obj
+// when the method executes, this key work wont refer to this it object
+// this method was part of originally, not to the it object
+// describe is called on itCopy and it is an object has no name property
+// so when we access this.name from it.describe, we get an error because this doesnt refer to an object with a name.
+// itCopy.describe();
