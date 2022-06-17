@@ -1,16 +1,23 @@
-class Department {
+abstract class Department {
+    static fistcalYear = 2020;
     // private readonly id: string;
     // private name: string;
-    private employees: string[] = [];
+    protected employees: string[] = [];
 
-    constructor(private readonly id: string, public name: string) {
+    constructor(protected readonly id: string, public name: string) {
         // this.id = id;
         // this.name = n;
+        // console.log(Department.fistcalYear)
     }
 
-    describe (this: Department) {
-        console.log(`Department (${this.id}): ${this.name}`);
+    static createEmployee(name: string) {
+        return {name: name}
     }
+
+    abstract describe (this: Department): void; 
+    // {
+    //     // console.log(`Department (${this.id}): ${this.name}`);
+    // }
 
     addEmployee(employee: string) {
         this.employees.push(employee);
@@ -29,22 +36,57 @@ class ITDepartment extends Department{
         super(id, 'IT')
         this.admins = admins
     }
+
+    describe() {
+        console.log('It Department - ID: ' + this.id);
+    }
 }
 
 class AccountingDepartment extends Department {
+    private lastReport: string;
+
+    get mostRecentReport() {
+        if(this.lastReport) {
+            return this.lastReport;
+        }
+        throw new Error ('No report found.')
+    }
+
+    set mostRecentReport(value: string) {
+        if (!value) {
+            throw new Error('Please pass in a valid value!')
+        }
+        this.addReport(value);
+    }
+
     constructor(id: string, private reports: string[]) {
         super(id, 'IT')
+        this.lastReport = reports[0]
+    }
+
+    describe() {
+        console.log('Accounting Department - ID:' + this.id);
+    }
+
+    addEmployee(name: string) {
+        if(name === 'Nio') {
+            return;
+        }
+        this.employees.push(name);
     }
 
     addReport(text: string) {
         this.reports.push(text);
+        this.lastReport = text;
     }
 
-    getReports() {
+    printReports() {
         console.log(this.reports);
     }
 }
 
+const employee1 = Department.createEmployee('Mina');
+console.log(employee1, Department.fistcalYear)
 
 // creating a department object - now we pass constructor arg to this department between () 
 const it = new ITDepartment('d1', ['Nio']);
@@ -61,8 +103,19 @@ it.printEmployeeInformation();
 console.log(it)
 
 const accounting = new AccountingDepartment('d2', []);
+
+
+accounting.mostRecentReport = 'Year End Report'
 accounting.addReport('Something went wrong...');
-accounting.getReports();
+
+console.log(accounting.mostRecentReport)
+
+accounting.addEmployee('Nio')
+accounting.addEmployee('Manu')
+
+// accounting.printEmployeeInformation();
+// accounting.printReports();
+accounting.describe();
 
 // const itCopy = { name: 'Dummy', describe: it.describe}
 
