@@ -8,13 +8,19 @@ function Logger(logString: string) {
 // metaprogramming
 function WithTempalte(template: string, hookId: string) {
     console.log('Template Factory')
-    return function(constructor: any) {
-        console.log('rendering..tempalte..')
-        const hookEl = document.getElementById(hookId);
-        const p = new constructor();
-        if(hookEl) {
-            hookEl.innerHTML = template
-            hookEl.querySelector('h1')!.textContent = p.name
+    return function<T extends {new(...args: any[]): {name: string}}>(originalConstructor: T) {
+        // return a cosntructor func based on original constructor func
+        return class extends originalConstructor {
+            constructor(..._: any[]) {
+                super();
+                console.log('rendering..tempalte..')
+                const hookEl = document.getElementById(hookId);
+                // const p = new originalConstructor();
+                if(hookEl) {
+                    hookEl.innerHTML = template
+                    hookEl.querySelector('h1')!.textContent = this.name
+                }
+            }
         }
     }
 }
@@ -29,8 +35,8 @@ class Person {
     }
 }
 
-const pers = new Person();
-console.log(pers)
+// const pers = new Person();
+// console.log(pers)
 
 //-----
 
@@ -85,3 +91,4 @@ class Product {
         return this._price * (1 + tax);
     }
 }
+
