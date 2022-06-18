@@ -1,12 +1,15 @@
 function Logger(logString: string) {
+    console.log('Logger Factory')
     return function (constructor: Function) {
         console.log(logString);
         console.log(constructor)
     }
 }
-
+// metaprogramming
 function WithTempalte(template: string, hookId: string) {
+    console.log('Template Factory')
     return function(constructor: any) {
+        console.log('rendering..tempalte..')
         const hookEl = document.getElementById(hookId);
         const p = new constructor();
         if(hookEl) {
@@ -16,7 +19,7 @@ function WithTempalte(template: string, hookId: string) {
     }
 }
 
-// @Logger('LOGGIN - PERSON')
+@Logger('LOGGIN - PERSON')
 @WithTempalte('<h1>My Person Object</h1>', 'app')
 class Person {
     name = 'Max';
@@ -28,3 +31,34 @@ class Person {
 
 const pers = new Person();
 console.log(pers)
+
+//-----
+
+function Log(target: any, propertyName: string | Symbol) {
+    console.log('Property decorator!');
+    console.log(target, propertyName);
+}
+
+class Product {
+    @Log
+    title: string;
+    private _price: number;
+
+    set price(val: number) {
+        if (val >0) {
+            this._price = val;
+        } else {
+            throw new Error ('Invalid price - should be positive')
+        }
+        
+    }
+
+    constructor(t: string, p:number) {
+        this.title = t;
+        this._price = p;
+    }
+
+    getPriceWithTax(tax:number) {
+        return this._price * (1 + tax);
+    }
+}
