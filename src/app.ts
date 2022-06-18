@@ -46,8 +46,11 @@ extractAndCovert({name: 'Max'}, 'name');
 
 
 class DataStorage<T extends string | number | boolean> {
+    // private data: (string | number | boolean)[] = []; this can have an array of strings, numbers and booleans mixed. 
+    // private data: string[] | number[] | boolean[] = []; 
     private data: T[] = [];
 
+    // addItem(item: string | number | boolean) { 
     addItem(item: T) { 
         this.data.push(item);
     }
@@ -79,3 +82,22 @@ const numberStorage = new DataStorage<number>();
 // //..
 // objStorage.removeItem(maxObj);
 // console.log(objStorage.getItems());
+
+interface CourseGoal {
+    title: string;
+    description: string;
+    completeUntil: Date;
+}
+
+function createCourseGoal(title: string, description: string, date: Date): CourseGoal {
+    // return {title: title, description: description, completeUntil: date}
+    let courseGoal: Partial<CourseGoal> = {};
+    courseGoal.title = title;
+    courseGoal.description = description;
+    courseGoal.completeUntil = date;
+    return courseGoal as CourseGoal;
+}
+
+const names: Readonly<string[]> = ['Max', 'Sports'];
+// names.push('Manu')
+console.log(names)
